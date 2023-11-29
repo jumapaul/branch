@@ -30,7 +30,7 @@ fun NavGraph(navHostController: NavHostController) {
         ) { backStackEntry ->
             val threadId = backStackEntry.arguments?.getInt("id")
             if (threadId != null) {
-                ChatScreen(navController = navHostController, threadId = threadId)
+                ChatScreen(threadId = threadId)
             }
         }
     }

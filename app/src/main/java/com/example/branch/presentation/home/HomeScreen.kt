@@ -1,5 +1,6 @@
 package com.example.branch.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,9 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.rememberNavController
 import com.example.branch.domain.model.MessagesEntity
 import com.example.branch.domain.model.timestampToDate
 import com.example.branch.presentation.home.viewmodel.MessagesViewModel
@@ -24,8 +28,8 @@ import com.example.branch.presentation.navigation.NavigationRoutes
 
 @Composable
 fun HomeScreen(
-    messagesViewModel: MessagesViewModel = hiltViewModel(),
     navController: NavController,
+    messagesViewModel: MessagesViewModel = hiltViewModel(),
 ) {
     val messages: Map<Int, List<MessagesEntity>> = messagesViewModel.messages.value.messages
         .toMutableList()
@@ -66,27 +70,24 @@ fun MessagesCard(messagesEntity: MessagesEntity?, onView: (Int) -> Unit) {
             .padding(8.dp)
     ) {
         Row {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .padding(16.dp)
-            ) {
-                Text(text = "ID: ${messagesEntity?.id}")
-                Text(text = "Agent ID: ${messagesEntity?.agent_id ?: "-"}")
-                Text(text = "Body: ${messagesEntity?.body ?: "-"}")
-                Text(text = "Thread ID: ${messagesEntity?.thread_id ?: "-"}")
-                Text(text = "Timestamp: ${timestampToDate(messagesEntity?.timestamp ?: 1686196800000)}")
-                Text(text = "User ID: ${messagesEntity?.user_id}")
-            }
-            Button(onClick = {
-                if (messagesEntity?.thread_id != null) {
-                    onView(messagesEntity.thread_id)
+            Box(modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(16.dp)
+                .clickable {
+                    if (messagesEntity?.thread_id != null) {
+                        onView(messagesEntity.thread_id)
+                    }
+                }) {
+                Column{
+                    Text(text = "ID: ${messagesEntity?.id}")
+                    Text(text = "Agent ID: ${messagesEntity?.agent_id ?: "-"}")
+                    Text(text = "Body: ${messagesEntity?.body ?: "-"}")
+                    Text(text = "Thread ID: ${messagesEntity?.thread_id ?: "-"}")
+                    Text(text = "Timestamp: ${timestampToDate(messagesEntity?.timestamp ?: 1686196800000)}")
+                    Text(text = "User ID: ${messagesEntity?.user_id}")
                 }
-            }) {
-                Text(text = "Reply")
             }
         }
     }
 }
-
 
